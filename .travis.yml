@@ -3,3 +3,5 @@ node_js:
   - 5.0.0
 before_script:
   - npm install -g eslint mocha
+notifications:
+  email: false

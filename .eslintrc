@@ -9,7 +9,8 @@
 
   "env": {
     "node": true,
-    "es6": true
+    "es6": true,
+    "browser": true
   },
 
   "rules":  {
@@ -119,9 +120,7 @@
     "no-var": 2,
     "no-warning-comments": 2,
     "no-with": 0,
-    "no-magic-numbers": 2,
     "array-bracket-spacing": 2,
-    "arrow-body-style": 2,
     "arrow-parens": 2,
     "arrow-spacing": 2,
     "accessor-pairs": 0,

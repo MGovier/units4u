@@ -37,3 +37,7 @@ node_modules
 
 # Environment variable file
 .env
+
+# built files
+resources/correctedReviews.json
+app/public/js/scripts.build.js
