@@ -1,10 +1,33 @@
 'use strict';
 const defaultKeyword = 'geometry';
 
-const loadRecommendations = (keyword) => new Promise((resolve, reject) => {
-  keyword = keyword || ''; // default to an empty string
+function debounce (func, wait, immediate) {
+  let timeout;
+  return () => {
+    const context = this, args = arguments; // eslint-disable-line consistent-this
+    const later = () => {
+      timeout = null;
+      if (!immediate) {
+        func.apply(context, args);
+      }
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) {
+      func.apply(context, args);
+    }
+  }
+}
 
-  const reccommendationUri = `api/recommendation?keyword=${keyword}`; // eslint-disable-line no-undef
+const loadRecommendations = (keyword, assessment, sentiment) => new Promise((resolve, reject) => {
+
+  // default arguments to if not passed in
+  keyword = keyword || defaultKeyword;
+  assessment = assessment || '';
+  sentiment = sentiment || 'loved';
+
+  const reccommendationUri = `api/recommendation?keyword=${keyword}&assessment=${assessment}&sentiment=${sentiment}`; // eslint-disable-line no-undef
   fetch(reccommendationUri)
     .then((response) => response.json())
     .then(resolve)
@@ -56,7 +79,9 @@ const displayRecommendations = (result) => {
   let output = '';
 
   output += `
-  <div class="column">
+
+    <p class="output__intro">OK, based on the filters, here's what we've got:</p>
+
     <h1>${unit.title} (<small>${unit.code}</small>)</h1>
     <p>${unit.summary}</p>
 
@@ -81,11 +106,8 @@ const displayRecommendations = (result) => {
 
   output += `
     </div>
-  </div>
 
-  <div class="column">
-
-    <h2>Reviews</h2>
+    <h2>Reviews for <q>${unit.title}</q></h2>
   `;
 
   if (reviews.length < 1) {
@@ -124,8 +146,6 @@ const displayRecommendations = (result) => {
 
     <div class="output__jobs"></div>
 
-    </div>
-
   `;
 
   outputEl.innerHTML = output;
@@ -142,7 +162,7 @@ const displayRecommendations = (result) => {
       const jobs = result.jobs;
 
       jobsOutput += `
-        <h2>Jobs</h2>
+        <h2>Jobs for <q>${unit.title}</q></h2>
       `;
 
       if (jobs.length < 1) {
@@ -163,35 +183,43 @@ const displayRecommendations = (result) => {
         `;
       }
 
-      jobsOutput += `
-      </div>
-      `;
-
       jobsEl.innerHTML = jobsOutput;
-
     })
     .catch((error) => console.log(error));
-
-
 }
 
-const handleKeywordInput = (event) => {
-  const keyword = event.target.value.trim() || defaultKeyword; // default to keyword
+const handleInput = debounce(() => {
+  const keyword = document.querySelector('.filter__keyword').value.trim();
+  const assessment = document.querySelector('input[name="assessment"]:checked').value;
+  const sentiment = document.querySelector('input[name="sentiment"]:checked').value;
 
-  loadRecommendations(keyword)
+  loadRecommendations(keyword, assessment, sentiment)
     .then(displayRecommendations)
     .catch((err) => console.log(err));
-};
+}, 150);
 
 const load = () => {
-  const keywordInputEl = document.querySelector('.keyword__input');
+  const keywordInputEl = document.querySelector('.filter__keyword');
+  const assessmentInputEls = document.querySelectorAll('.filter__assessment');
+  const sentimentInputEls = document.querySelectorAll('.filter__sentiment');
 
-  loadRecommendations(defaultKeyword)
+  // load default recommendations
+  loadRecommendations()
     .then(displayRecommendations)
     .catch((err) => console.log(err));
 
   keywordInputEl.placeholder = defaultKeyword;
-  keywordInputEl.addEventListener('input', handleKeywordInput, false);
+  keywordInputEl.addEventListener('input', handleInput, false);
+
+  for (let i = 0; i < assessmentInputEls.length; i++) {
+    const assessmentInputEl = assessmentInputEls[i];
+    assessmentInputEl.addEventListener('change', handleInput, false);
+  }
+
+  for (let i = 0; i < sentimentInputEls.length; i++) {
+    const sentimentInputEl = sentimentInputEls[i];
+    sentimentInputEl.addEventListener('change', handleInput, false);
+  }
 };
 
 window.onload = load;

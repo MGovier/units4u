@@ -27,85 +27,227 @@ main {
   margin: 0 auto;
 }
 
-.column {
-  float: left;
-  width: 50%;
+.row {
+  overflow: hidden; /* clearfix */
 }
 
-.column:first-child {
-  padding-right: 2em;
-}
-
-.column:last-child {
-  padding-left: 2em;
-}
-
-.column h1 {
-  margin-bottom: .25em;
-
+header {
   text-align: center;
-  color: #4E4E4E;
 }
 
-.column h2 {
-  color: #5A5A5A;
-}
-
-.column h3 {
-  color: #616161;
-}
-
-.column p {
-  line-height: 1.5em;
-  color: grey;
-}
-
-.students {
+header .students {
   padding: 0;
   margin: 0 0 1em;
 
   list-style: none;
 }
 
-.students > li {
+header .students > li {
   display: inline-block;
 
   color: #9C9C9C;
 }
 
-.students > li::after { content: ', '; }
+header .students > li::after { content: ', '; }
 
-.keyword__instructions {
+.summary,
+.filters {
+  float: left;
+  width: 50%;
+}
+
+.summary {
+  padding-right: 2em;
+}
+
+.summary h2 {
+  color: #505050;
+}
+
+.summary p {
+  color: #383838;
+  line-height: 1.25em;
+}
+
+.summary p a {
+  color: #2E388C;
+  font-weight: bold;
+  text-decoration: none;
+
+  transition: opacity .15s;
+}
+
+.summary p a:hover {
+  opacity: .75;
+}
+
+.filter__instructions {
   width: 100%;
-  margin: 2em 0 .25em;
+  margin: 1em 0 .5em;
 
   font-weight: bolder;
   text-align: center;
-  color: #2E388C;
+  color: #717171;
 }
 
-.keyword__input {
+.filters {
+  padding-top: 2em;
+}
+
+.filter__keyword {
   width: 100%;
   padding: .25em;
 
   font-size: 2em;
 
   text-align: center;
-  border: 2px solid #D8D8D8;
+  border: 2px solid #FFDDA5;
   border-radius: 5px;
-  color: #2E388C;
+  color: #F4AE36;
 
   transition: border-color .33s ease-out;
 }
 
-.keyword__input:focus {
-  border-color: #2E388C;
+.filter__keyword:focus {
+  border-color: #F4AE36;
   outline: none;
 }
 
+input[type="radio"] {
+  overflow: hidden; /* clearfix */
+  padding: 1em 0;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"] + label {
+  float: left;
+  padding: .5em 0;
+
+  text-align: center;
+
+  color: #2E388C;
+  border: 2px solid #2E388C;
+  border-left: 0;
+
+  background-repeat: no-repeat;
+  background-size: auto 60%;
+  background-position: 5% center;
+
+  transition: background .15s, color .15s;
+}
+
+input[type="radio"]:first-of-type + label {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-left: 2px solid;
+}
+
+input[type="radio"]:last-of-type + label {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+input[type="radio"]:checked + label {
+  color: white;
+
+  background-color: #2E388C;
+}
+
+input[type="radio"] + label:hover {
+  color: white;
+
+  background-color: #2E388C;
+  border-color: #2E388C;
+
+  cursor: pointer;
+}
+
+.assessment,
+.sentiment {
+  overflow: hidden; /* clearfix */
+}
+
+.filter__assessment + label {
+  width: 33.33%;
+}
+
+.filter__sentiment + label {
+  width: 50%;
+}
+
+input[type="radio"] + label[for="sentiment--loved"] {
+  color: #67B53F;
+  border-color: #67B53F;
+  background-image: url('../images/8.png');
+}
+
+input[type="radio"]:checked + label[for="sentiment--loved"] {
+  background-color: #67B53F;
+  color: white;
+}
+
+input[type="radio"] + label[for="sentiment--loved"]:hover {
+  background-color: #67B53F;
+  color: white;
+}
+
+input[type="radio"] + label[for="sentiment--hated"] {
+  color: #F44336;
+  border-color: #F44336;
+  background-image: url('../images/-8.png');
+}
+
+input[type="radio"]:checked + label[for="sentiment--hated"] {
+  background-color: #F44336;
+  color: white;
+}
+
+input[type="radio"] + label[for="sentiment--hated"]:hover {
+  background-color: #F44336;
+  color: white;
+}
+
+.output {
+  width: 70%;
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+.output p.output__intro {
+  margin: 2em 0 1.5em;
+  font-size: 1.5em;
+  line-height: 1em;
+
+  text-align: center;
+  color: #9da4cc;
+}
+
+.output h1 {
+  margin-bottom: .25em;
+
+  text-align: center;
+  color: #4E4E4E;
+}
+
+.output h2 {
+  color: #5A5A5A;
+}
+
+.output h3 {
+  color: #616161;
+}
+
+.output p {
+  line-height: 1.5em;
+  color: grey;
+}
+
 .output mark {
-  background: rgba(255, 255, 0, .5);
-  box-shadow: 0 0 0 3px rgba(255, 255, 0, .5);
+  background: rgba(255, 161, 0, .5);
+  box-shadow: 0 0 0 2px rgba(255, 161, 0, .5);
 }
 
 .output .no-recommendations {
@@ -231,23 +373,10 @@ h3.review__sentiment {
   color: #636AAD;
 }
 
-footer {
-  float: left;
-  margin: 2em auto;
-  width: 100%;
-  
-  color: #ABABAB;
-  text-align: center;
-}
-
-footer a {
-  color: inherit;
-}
-
 @media (max-width: 60em) {
-  .column,
-  .column:first-child,
-  .column:last-child {
+  .summary,
+  .filters,
+  .output{
     width: 100%;
     padding: 0;
   }
